@@ -24,12 +24,16 @@ module.exports = function(log) {
 
     let author = cursor.next();
     let merge = null;
-
+    let parents = [];
+    
     if (author.indexOf('Merge') >= 0) {
       merge = author;
       author = cursor.next();
+    } else if (author.indexOf('Parents:') >= 0) {
+      parents = author.replace(/Parents: ?/.'').trim().split(' ');
+      author = cursor.next();
     }
-
+    
     if (!author) {
       throw new Error(`Could not parse git log entry with no author given at line ${cursor.index()}`);
     }
@@ -51,6 +55,7 @@ module.exports = function(log) {
       sha,
       author: parseAuthor(author),
       merge,
+      parents,
       date,
       message,
       stat,
