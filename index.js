@@ -30,7 +30,7 @@ module.exports = function(log) {
       merge = author;
       author = cursor.next();
     } else if (author.indexOf('Parents:') >= 0) {
-      parents = author.replace(/Parents: ?/.'').trim().split(' ');
+      parents = author.replace(/Parents: ?/,'').trim().split(' ');
       author = cursor.next();
     }
     
