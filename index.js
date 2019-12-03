@@ -1,5 +1,6 @@
 const matchGroups = require('./lib/match-groups');
 const parseStat = require('./lib/parse-stat');
+const parseDiff = require('./lib/parse-diff');
 const parseTags = require('./lib/parse-tags');
 const parseBranches = require('./lib/parse-branches');
 const Cursor = require('./lib/cursor');
@@ -50,6 +51,7 @@ module.exports = function(log) {
       .reduce((accumulator, current, idx) => (idx === 0 ? current : accumulator + '\n' + current), '');
 
     const stat = parseStat(cursor);
+    const diff = parseDiff(cursor);
 
     const commit = {
       sha,
@@ -59,6 +61,7 @@ module.exports = function(log) {
       date,
       message,
       stat,
+      diff,
     };
 
     if (tags) {
