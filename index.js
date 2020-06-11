@@ -14,7 +14,11 @@ module.exports = function(log) {
   const cursor = new Cursor(lines);
 
   while (cursor.hasNext() && cursor.peek().length > 0) {
-    const { sha, decoration } = matchGroups(/commit\s(?<sha>[a-f0-9]*)(\s\((?<decoration>.*)\))?/i, cursor.next());
+    
+    const { sha, parentShas, decoration } = matchGroups(
+      /commit\s(?<sha>[a-f0-9]*)\s?(?<parentShas>[a-f0-9 ]*)?\s?(\((?<decoration>.*)\))?/i
+      , cursor.next()
+    );
 
     if (!sha) {
       throw new Error(`Could not parse git log entry with no sha given at line ${cursor.index()}`);
@@ -25,7 +29,7 @@ module.exports = function(log) {
 
     let author = cursor.next();
     let merge = null;
-    let parents = [];
+    let parents = (parentShas && parentShas.trim().split(' ') ) || [];
     
     if (author.indexOf('Merge') >= 0) {
       merge = author;
