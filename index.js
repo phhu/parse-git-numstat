@@ -15,8 +15,12 @@ module.exports = function(log) {
   const cursor = new Cursor(lines);
 
   while (cursor.hasNext() && cursor.peek().length > 0) {
-    const { sha, parentShas, decoration } = matchGroups(/commit\s(?<sha>[a-f0-9]*)\s?(?<parentShas>[a-f0-9 ]*)?\s?(\((?<decoration>.*)\))?/i, cursor.next());
-    //console.log("decoration",sha,parentShas,decoration);
+    
+    const { sha, parentShas, decoration } = matchGroups(
+      /commit\s(?<sha>[a-f0-9]*)\s?(?<parentShas>[a-f0-9 ]*)?\s?(\((?<decoration>.*)\))?/i
+      , cursor.next()
+    );
+
     if (!sha) {
       throw new Error(`Could not parse git log entry with no sha given at line ${cursor.index()}`);
     }
